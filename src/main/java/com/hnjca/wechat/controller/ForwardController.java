@@ -2,6 +2,7 @@ package com.hnjca.wechat.controller;
 
 import com.hnjca.wechat.enums.InfoEnum;
 import com.hnjca.wechat.util.DateUtil;
+import com.hnjca.wechat.util.MyConfig;
 import com.hnjca.wechat.util.MyRequestUtil;
 import com.hnjca.wechat.vo.ResponseInfo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NO_STUNAME_lowercase,-1);
         }
 
-        String url = "http://photo.gdeastriver.com:8888/icard/binding.action";
+        String url = MyConfig.ICARD_URL+ "/binding.action";
         String result = MyRequestUtil.sendPost(url,"openid="+openid+"&stuno="+stuno+"&stuname="+stuname);
 
         System.out.println("绑定结果:"+result);
@@ -60,8 +61,7 @@ public class ForwardController {
         if(fromuser == null || "".equals(fromuser)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
-
-        String url = "http://photo.gdeastriver.com:8888/icard/validateBind.action";
+        String url = MyConfig.ICARD_URL+ "/validateBind.action";
         String result = MyRequestUtil.sendPost(url,"fromuser="+fromuser);
 
         return new ResponseInfo(InfoEnum.SUCCESS,result);
@@ -79,7 +79,7 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
 
-        String url = "http://photo.gdeastriver.com:8888/icard/queryCardInfo.action";
+        String url = MyConfig.ICARD_URL+ "/queryCardInfo.action";
         String result = MyRequestUtil.sendPost(url,"fromuser="+fromuser);
 
         return new ResponseInfo(InfoEnum.SUCCESS,result);
@@ -121,7 +121,7 @@ public class ForwardController {
             type = "0";
         }
 
-        String url = "http://photo.gdeastriver.com:8888/icard/queryConsumeByPage.action";
+        String url = MyConfig.ICARD_URL+ "/queryConsumeByPage.action";
         String result = MyRequestUtil.sendGet(url,"fromuser="+fromuser+"&start="+start+"&pageSize="+pageSize+"&month="+month+"&type="+type);
 
         if(result.equals("baocuo")){
@@ -159,7 +159,7 @@ public class ForwardController {
             month = DateUtil.getMonthStr();
         }
 
-        String url = "http://photo.gdeastriver.com:8888/icard/queryDoorByPage.action";
+        String url = MyConfig.ICARD_URL+ "/queryDoorByPage.action";
         String result = MyRequestUtil.sendGet(url,"fromuser="+fromuser+"&start="+start+"&pageSize="+pageSize+"&month="+month);
 
         if(result.equals("baocuo")){

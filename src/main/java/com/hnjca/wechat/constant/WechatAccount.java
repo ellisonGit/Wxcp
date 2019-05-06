@@ -1,5 +1,7 @@
 package com.hnjca.wechat.constant;
 
+import com.hnjca.wechat.util.MyConfig;
+
 /**
  * Description: 微信账号 appId secret token
  * User: by yangyong
@@ -9,8 +11,12 @@ package com.hnjca.wechat.constant;
  */
 public enum WechatAccount {
 
-    TEST_ACCOUNT("wx42a3f104c41fe2ea","97dd18649d642c00c7b66253deb3e354","test_account"),
+    //TEST_ACCOUNT("wx42a3f104c41fe2ea","97dd18649d642c00c7b66253deb3e354","test_account"),
+   // HNJCA("wxbdcb4a18a86e232e","8d420ccfd7488efd8621e03f0f98ba1d","hunanJIECHENGAN");
+
+   TEST_ACCOUNT(MyConfig.APPID,MyConfig.SECRET,MyConfig.TOKEN),
     HNJCA("wxbdcb4a18a86e232e","8d420ccfd7488efd8621e03f0f98ba1d","hunanJIECHENGAN");
+
    //appid
     private String appId ;
 
