@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnjca.wechat.dao.TestDao">
+
+    <select id="selectSign" resultType="int">
+        select sign from yy_sign where id = 1
+    </select>
+
+    <update id="updateSign" parameterType="int">
+        update yy_sign set sign = #{sign} where id = 1
+    </update>
+
+    <select id="selectBySection" parameterType="java.util.Map" resultType="com.hnjca.wechat.pojo.YYTest">
+        select * from yy_test where  id between #{start} and #{end}
+    </select>
+
+    <insert id="insertOne" parameterType="com.hnjca.wechat.pojo.YYTest">
+        <selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="logId">
+            SELECT SEQ_yy_test.nextval AS id FROM dual
+        </selectKey>
+        insert into yy_test
+          (id,user_id,bumen_id,money,remain_money,create_time,machine_id,machine_name,openid,user_name,bumen_name)
+            values
+          (#{id},#{userId},#{bumenId},#{money},#{remainMoney},sysdate,#{machineId},#{machineName},#{openId},#{userName},#{bumenName})
+    </insert>
+
+    <select id="selectMaxId" resultType="int">
+        select max(id) from yy_test
+    </select>
+</mapper>

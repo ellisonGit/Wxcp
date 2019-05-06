@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> 
+	<settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="useGeneratedKeys" value="false"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <!-- 执行方式，这里采用默认设置，设置为BATCH后，update语句不会返回受影响记录数
+        <setting name="defaultExecutorType" value="BATCH"/> 
+        -->
+        <!-- 
+        	开启数据库字段和pojo字段基于约定的自动映射
+        	进行自动映射时，数据以下划线命名，如数据库返回的"order_address"命名字段是否映射为class的"orderAddress"字段。默认为false 
+        -->
+        <setting name="mapUnderscoreToCamelCase" value="true" /> 
+    </settings>
+</configuration>

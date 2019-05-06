@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  tomcat:
+    max-threads: 800
+    max-http-header-size: 8192
+
+
+spring:
+  datasource:
+    druid:
+      username: ICARD
+      password: ICARD
+      url: jdbc:oracle:thin:@120.78.151.34:1521:orcl
