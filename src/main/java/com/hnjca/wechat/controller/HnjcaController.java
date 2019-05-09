@@ -174,7 +174,7 @@ public class HnjcaController {
 
             Cookie ticketCookie = new Cookie(WXConfig.cookieName,StrUtil.UrlEncode(signUserInfo));
             ticketCookie.setPath("/");
-            ticketCookie.setDomain("130xxxx5088.com");
+            ticketCookie.setDomain(MyConfig.yuUrl);//设置域名
             ticketCookie.setMaxAge(20*24*3600);//设置cookies保存时间为20天
             response.addCookie(ticketCookie);
 

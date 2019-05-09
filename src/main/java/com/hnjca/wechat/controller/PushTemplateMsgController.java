@@ -2,6 +2,7 @@ package com.hnjca.wechat.controller;
 
 import com.hnjca.wechat.enums.InfoEnum;
 import com.hnjca.wechat.pojo.TemplateJson;
+import com.hnjca.wechat.util.MyConfig;
 import com.hnjca.wechat.util.TemplateMsgUtil;
 import com.hnjca.wechat.vo.ResponseInfo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +55,7 @@ public class PushTemplateMsgController {
         TemplateJson templateJson = new TemplateJson();
         templateJson.setTouser(openId);
         templateJson.setTemplate_id("CCHmBzIIFQKXWJWxOjE_WNzVSONSHaxn20Rn7wXu6YA");
-        templateJson.setUrl("http://www.130xxxx5088.com/test/info_1.html?t=1");
+        templateJson.setUrl(MyConfig.comUrl+"/info_1.html?t=1");
         templateJson.setDataFirstValue("家长您好，您的孩子有一条新的出入校园记录");
         templateJson.setDataKeyWord1Value(name);
         templateJson.setDataKeyWord2Value(time);
@@ -171,6 +172,54 @@ public class PushTemplateMsgController {
         templateJson.setDataKeyWord3Value(money);
         templateJson.setDataKeyWord4Value(time);
         templateJson.setDataKeyWord5Value(remainMoney);
+        templateJson.setDataRemarkValue("点击详情可查看更多信息");
+
+        boolean result = TemplateMsgUtil.sendTemplateMsg(templateJson);
+        if(result){
+            return new ResponseInfo(InfoEnum.SUCCESS,"template message send success !");
+        }else{
+            return new ResponseInfo(InfoEnum.TEMPLATE_MSG_FAILED,"template message send failed !");
+        }
+    }
+    /**
+     * 推送考勤刷卡记录模板消息
+     * @param openId
+     * @param time
+     * @param name
+     * @param status
+     * @return
+     * author ellison
+     */
+    //todo 待优化 wifi？
+    @GetMapping(value = "pushKQCard")
+
+    public ResponseInfo pushKQCard(String openId,String time,String name,String status){
+
+        if(openId == null || ("").equals(openId)){
+            return new ResponseInfo(InfoEnum.NO_OPENID,-1);
+        }
+
+        if(name == null || ("").equals(name)){
+            return new ResponseInfo(InfoEnum.NO_STUNAME,-1);
+        }
+
+        if(status == null || ("").equals(status)){
+            return new ResponseInfo(InfoEnum.NO_MONEY,-1);
+        }
+
+        if(time == null || ("").equals(time)){
+            return new ResponseInfo(InfoEnum.NO_TIMESTR,-1);
+        }
+
+        TemplateJson templateJson = new TemplateJson();
+        templateJson.setTouser(openId);
+        templateJson.setTemplate_id("nh8LNDGC52Feyj7Mj1sRh-IR-o8SEcAfiPLG1urhCBA");//考勤通知 todo wx 模板消息id
+        templateJson.setUrl(MyConfig.comUrl+"/info_1.html?t=2");
+        templateJson.setDataFirstValue("考勤成功");
+        templateJson.setDataKeyWord1Value(name);
+        templateJson.setDataKeyWord2Value(time);
+        templateJson.setDataKeyWord3Value("wifi");
+        templateJson.setDataKeyWord4Value(status);
         templateJson.setDataRemarkValue("点击详情可查看更多信息");
 
         boolean result = TemplateMsgUtil.sendTemplateMsg(templateJson);

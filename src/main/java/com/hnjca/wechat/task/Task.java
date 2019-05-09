@@ -45,7 +45,7 @@ public class Task {
         System.out.println("---------------------");
     }
 
-    @Scheduled(cron="0 */1 * * * ?")   //每1分钟执行一次
+   //todo 暂停 @Scheduled(cron="0 */1 * * * ?")   //每1分钟执行一次
     public void getTestDataBySection(){
 
         Integer start = testService.selectSign();

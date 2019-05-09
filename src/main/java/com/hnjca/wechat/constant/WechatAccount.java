@@ -15,7 +15,7 @@ public enum WechatAccount {
    // HNJCA("wxbdcb4a18a86e232e","8d420ccfd7488efd8621e03f0f98ba1d","hunanJIECHENGAN");
 
    TEST_ACCOUNT(MyConfig.APPID,MyConfig.SECRET,MyConfig.TOKEN),
-    HNJCA("wxbdcb4a18a86e232e","8d420ccfd7488efd8621e03f0f98ba1d","hunanJIECHENGAN");
+    HNJCA("wxbdcb4a18a86e232e","8d420ccfd7488efd8621e03f0f98ba1d","ellison_aosd");
 
    //appid
     private String appId ;

@@ -1,5 +1,7 @@
 package com.hnjca.wechat.constant;
 
+import com.hnjca.wechat.util.MyConfig;
+
 /**
  * Description:
  * User: by yangyong
@@ -37,7 +39,7 @@ public class WXConfig {
 
     public static final String step1Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%1$s&redirect_uri=%2$s&response_type=code&scope=snsapi_userinfo&state=abc#wechat_redirect";
 
-    public static final String actAuthUrl = "http://www.130xxxx5088.com/api/hnjca/auth?returnUrl=%1$s";
+    public static final String actAuthUrl = MyConfig.comUrl+"/hnjca/auth?returnUrl=%1$s";
 
     /**
      * 创建菜单的链接

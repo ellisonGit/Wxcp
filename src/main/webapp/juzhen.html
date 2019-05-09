@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+<title>一卡通矩阵</title>
+<link type="text/css" rel="stylesheet" href="./static/style.css">
+<script type="text/javascript" src="./static/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.menu li').click(function(){
+			var index = $(this).index();
+			$('.con').eq(index).show().siblings('.con').hide();
+			$(this).addClass('curr').siblings().removeClass('curr');
+		});
+		
+		$(function(){
+			var $divWidth = $('.logo img').width();
+			$('.logo img').css({'height':$divWidth});
+		})	
+	});
+</script>
+<style>
+.clearf{
+	clear:left;
+}
+
+.blank{
+	clear:both;height:20px;
+}
+</style>
+</head>
+
+<body>
+
+
+<div class="container">
+	<div class="menu">
+		<ul>
+			<li class="curr bl" style="border: 1px solid #ff7e00;">消费</li>
+			<li>门禁</li>
+			<li class="br">考勤</li>
+		</ul>
+	</div>
+	<div class="con" style="display: block">
+		<h2>我的消费</h2> 
+		<ul class="logo">
+			<li><a href="http://llison.viphk.ngrok.org/api/info_1.html?t=2" title="消费明细"><img src="./static/xiaofeimingxi.png" style="height: 69px;"></a><p>消费明细</p></li>
+			<li><a href="http://130xxxx5088.com/test/info_1.html?t=2" title="充值明细"><img src="./static/chongzhimingxi.png" style="height: 69px;"></a><p>充值明细</p></li>
+			<li><a href="inTesting.html" title="消费订餐"><img src="./static/dingcan.png" style="height: 69px;"></a><p>消费订餐</p></li>
+			<li><a href="inTesting.html" title="订餐统计"><img src="./static/dingcanjilu.png" style="height: 69px;"></a><p>订餐统计</p></li>
+			<li><a href="inTesting.html" title="卡余额"><img src="./static/jine.png" style="height: 69px;"></a><p>卡余额</p></li>
+		</ul>
+		
+		<div class="blank"></div>
+		
+		<h2>消费汇总</h2> 
+		<ul class="logo">							
+			<li><a href="xiaofeihuizong.html" title="消费统计"><img src="./static/xiaofeitongji.png" style="height: 69px;"></a><p>消费统计</p></li>
+			<li><a href="chongzhihuizong.html" title="充值统计"><img src="./static/chongzhitongji.png" style="height: 69px;"></a><p>充值统计</p></li>
+			<li><a href="inTesting.html" title="订餐统计"><img src="./static/dingcanjilu.png" style="height: 69px;"></a><p>订餐统计</p></li>
+			<li><a href="zhongduanxiaofeihuizong.html" title="终端消费汇总"><img src="./static/huizongfenxi.png" style="height: 69px;"></a><p>终端消费汇总</p></li>
+			<li><a href="cantingxiaofeihuizong.html" title="餐厅消费汇总"><img src="./static/zhichuhuizong.png" style="height: 69px;"></a><p>餐厅消费汇总</p></li>
+            
+		</ul>
+	</div>
+	<div class="con">
+		<ul class="logo">
+			<li class="clearf"><a href="http://130xxxx5088.com/test/info_1.html?t=1" title="通行记录"><img src="./static/tongxing.png" style="height: 69px;"></a><p>通行记录</p></li>	
+			<li><a href="inTesting.html" title="一键开门"><img src="./static/kaimen.png" style="height: 69px;"></a><p>一键开门</p></li>	
+			<li><a href="inTesting.html" title="访客授权"><img src="./static/fangke.png" style="height: 69px;"></a><p>访客授权</p></li>	
+			<li class="clearf"><a href="inTesting.html" title="我的权限"><img src="./static/quanxian.png" style="height: 69px;"></a><p>我的权限</p></li>	
+			<li><a href="inTesting.html" title="二维码开门"><img src="./static/erweimakaimen.png" style="height: 69px;"></a><p>二维码开门</p></li>
+		</ul>				
+	</div>
+	<div class="con">
+    	<h2>我的考勤</h2> 
+		<ul class="logo pd">
+			<li class="clearf"><a href="inTesting.html" title="我的班次"><img src="./static/wodebanci.png" style="height: 69px;"></a><p>我的班次</p></li>
+			<li><a href="inTesting.html" title="考勤记录"><img src="./static/kaoqingjilu.png" style="height: 69px;"></a><p>考勤记录</p></li>
+			<li><a href="inTesting.html" title="异常统计"><img src="./static/yichagntongj.png" style="height: 69px;"></a><p>异常统计</p></li>
+			<li class="clearf"><a href="inTesting.html" title="手机打卡"><img src="./static/shoujidaka.png" style="height: 69px;"></a><p>手机打卡</p></li>
+			<li><a href="inTesting.html" title="外出申请"><img src="./static/waichu.png" style="height: 69px;"></a><p>外出申请</p></li>
+			<li><a href="inTesting.html" title="出差申请"><img src="./static/chuchai.png" style="height: 69px;"></a><p>出差申请</p></li>
+			<li class="clearf"><a href="inTesting.html" title="请假申请"><img src="./static/qingjiashenqing.png" style="height: 69px;"></a><p>请假申请</p></li>
+		</ul>	
+  
+		<h2>审批汇总</h2>
+		<ul class="logo pd">			
+			<li class="clearf"><a href="inTesting.html" title="领导审批"><img src="./static/shengpi.png" style="height: 69px;"></a><p>领导审批</p></li>
+			<li><a href="inTesting.html" title="出勤汇总"><img src="./static/chuqing.png" style="height: 69px;"></a><p>出勤汇总</p></li>
+		</ul>	
+			
+	</div> 
+</div>
+
+</body>
+</html>

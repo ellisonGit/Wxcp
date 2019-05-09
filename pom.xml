@@ -106,6 +106,7 @@
 
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
@@ -116,6 +117,25 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <!-- 页面 -->
+        <resources>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <!--注意此次必须要放在此目录下才能被访问到 -->
+                <targetPath>META-INF/resources</targetPath>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>

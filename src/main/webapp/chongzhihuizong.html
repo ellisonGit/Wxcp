@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<head>
+<title>充值汇总</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+<!-- head 中 -->
+<link rel="stylesheet" href="css/weui.min.css">
+<link rel="stylesheet" href="css/jquery-weui.min.css">
+
+<style>
+	html , body{
+		margin:0;padding:0;background-color:#ffffff;
+	}
+	.container{
+		background-color:rgb(247,247,247);padding:.5rem ;
+		border-bottom:1px solid rgb(238,238,238)
+	}
+	.clear{
+		width:100%;height:1px;clear:both;
+	}   	
+	.choose button {
+		font-size:1rem;	
+		border:none;
+		background:none;
+	}
+	.choose img {
+		vertical-align:bottom; margin-left:1px;width:22px;height:22px;
+	}
+	
+	.info{
+		display:flex;font-size:.7rem;color:rgb(156,156,156);line-height:.7rem;margin-top:.3rem;
+	}
+	
+	.info .left{
+		flex:3.5;
+	}
+	
+	.info .right{
+		flex:1;border-left:1px rgb(156,156,156) solid;
+		text-align:right;
+	}
+	
+	.info .right img {
+		vertical-align:middle; margin-left:1px;width:.7rem;height:.7rem;margin-top:-3px;
+	}
+	
+	.hide{
+		display:none;
+	}
+		
+	#dataList .left{
+		width:50%;float:left;display:inline;border-right:1px solid #e4e4e4;
+	}
+	
+	#dataList .right{
+		width:49%;float:left;display:inline;overflow-x:scroll
+	}
+	
+	#dataList .item{
+		float:left;display:inline;padding:.2rem 0;
+	}
+	
+	#dataList .item.on{
+		background-color:rgb(242,242,242);
+	}
+	
+	#dataList .item.all{
+		background-color:rgb(165,123,123);
+	}
+		
+	#dataList .head .item{
+		background-color:rgb(242,242,242);
+	}
+	 
+	#dataList .left .item{
+		width:50%;text-align:center;
+	}
+	
+	#dataList .right .inner{
+		width:150%;height:auto;
+	}
+	
+	#dataList .right .inner .item{
+		width:33.33%;text-align:center;
+	}
+	
+</style> 
+ 
+</head>
+<body ontouchstart>
+  
+	<div class="container">
+		<div class="choose">	
+			<div class="clear"></div>
+			<button id="riqi" value="2019 4" />2019年4月</button><img src="img/xia.png" />
+			<div class="clear"></div>
+		</div>
+		
+		<div class="info hide">
+			<div class="left">支出 12345.67 收入 ￥98765.43</div>
+			<div class="right">月账单<img src="img/you.png"></div>
+		</div>
+	</div>
+	
+	<div id="dataList">
+		<div class="clear"></div>
+		<div class="left">
+			<div class="head">
+				<div class="item">日期</div>
+				<div class="item">汇总(元)</div>
+			</div>
+			
+			<div id="left_data"></div>
+		</div>
+		<div class="right">
+			<div class="inner">
+				<div class="head">
+					<div class="item">现金</div>
+					<div class="item">微信</div>
+					<div class="item">补贴</div>				
+				</div>
+				
+				<div id="right_data"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+  
+</body>
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/common.js"></script> 
+
+<script>
+  $(function() {
+    FastClick.attach(document.body);
+  });
+</script>
+<script>  
+
+	//获取openId
+	//var openId = getOpenIdFromCookie(); 
+	
+	//初始化方法，判断是否成功获取openId
+	//init();
+	//判断是否已经绑定
+	//validateBind();
+	  
+	//当前月份 yyyyMM
+	var myDate = new Date();
+	var year = myDate.getFullYear()+"";
+	var month = myDate.getMonth()+1+"";
+		 
+	$("#riqi").text(year+"年"+month+"月");	
+	$("#riqi").val(year+" "+month);		
+	
+	setTimeout(function(){
+		loadData();
+	},500);
+	
+	//初始化日历选择器
+	$("#riqi").picker({
+        title: "选择月份",		
+        cols: [
+          {
+            textAlign: 'center',
+            values: ['2018', '2019']
+          },
+          {
+            textAlign: 'center',
+            values: ['1', '2', '3', '4', '5', '6','7','8','9','10','11','12']
+          }
+        ],		
+		onClose: function(p) {
+			var newValue = p.value[0]+" "+p.value[1];
+			var newText = p.value[0]+"年"+p.value[1]+"月";
+			$("#riqi").val(newValue);		   
+			$("#riqi").text(newText);
+		   
+			setTimeout(function(){
+				loadData();
+			},500);
+        }
+    });
+  
+	function loadData(){		
+		$("#load_more2").hide();
+		$("#no_more2").show();
+		
+		$("#left_data").empty();
+		$("#right_data").empty();
+		
+		for(var i=1;i<=31;i++){
+			if(i%2==0){
+				$("#left_data").append("<div class=\"item on\">04"+getDateStr(i)+"</div><div class=\"item on\">"+randMoney()+"</div>");			
+				$("#right_data").append("<div class=\"item on\">"+randMoneyLittle()+".00</div><div class=\"item on\">"+randMoneyLittle()+".00</div><div class=\"item on\">"+randMoneyLittle()+".00</div>");
+			}else{
+				$("#left_data").append("<div class=\"item\">04"+getDateStr(i)+"</div><div class=\"item\">"+randMoney()+"</div>");			
+				$("#right_data").append("<div class=\"item\">"+randMoneyLittle()+".00</div><div class=\"item\">"+randMoneyLittle()+".00</div><div class=\"item\">"+randMoneyLittle()+".00</div>");
+			}			
+		}
+		
+		$("#left_data").append("<div class=\"item all\">合计</div><div class=\"item all\">"+randMoney()+"</div>");			
+		$("#right_data").append("<div class=\"item all\">"+randMoneyLittle()+".00</div><div class=\"item all\">"+randMoneyLittle()+".00</div><div class=\"item all\">"+randMoneyLittle()+".00</div>");
+	}
+	
+	function randMoney(){
+		return Math.ceil(10000*Math.random());
+	}
+	
+	function randMoneyLittle(){
+		return Math.ceil(3000*Math.random());
+	}
+	
+	function getDateStr(i){
+		if(i<10){
+			return "0"+i;
+		}
+		return i+"";
+	}
+</script> 
+</html>

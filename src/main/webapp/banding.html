@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<head>
+<title>用户绑定</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- head 中 -->
+<link rel="stylesheet" href="css/weui.min.css">
+<link rel="stylesheet" href="css/jquery-weui.min.css">
+
+<style> 
+html , body{
+	overflow-y:hidden;background-color:#ffffff;
+	padding:0;margin:0;
+} 
+.my_nav{
+	width:100%;
+	background-color:rgb(30,196,114);
+	color:#ffffff;
+	text-align:center;
+	font-size:1.1rem;
+	padding:0.3rem 0;
+}
+
+.blank{
+	width:100%;height:20px;clear:both;
+}
+
+.blank1{
+	width:100%;height:50px;clear:both;
+}
+
+.hide{
+	display:none;
+}
+.desc{
+	font-size:16px;padding:20px 15px 20px 15px;
+}
+</style>
+
+</head>
+<body>
+ 
+<!-- 头部导航条 --> 
+<div class="my_nav hide">
+	用户绑定
+</div>	  
+ 
+<div class="desc hide">&nbsp;&nbsp;&nbsp;&nbsp;使用前，输入以下信息，完成绑定即可用微信查询您的信息!</div> 
+ 
+<div class="blank1"></div>
+
+<div class="weui-cells__title">工号</div>
+<div class="weui-cells">
+	<div class="weui-cell">
+		<div class="weui-cell__bd">
+		  <input name="text" type="text" class="weui-input" id="gonghao" placeholder="请输入您的工号">
+		</div>
+	</div>
+</div>
+
+<div class="blank"></div>
+
+<div class="weui-cells__title">姓名</div>
+<div class="weui-cells">
+	<div class="weui-cell">
+		<div class="weui-cell__bd">
+		  <input id="xingming" class="weui-input" type="text" placeholder="请输入您的姓名">
+		</div>
+	</div>
+</div>
+
+<div class="weui-btn-area">
+	<a class="weui-btn weui-btn_primary" href="javascript:void(0);banding()" id="showTooltips">绑 定</a>
+</div>
+
+</body>
+
+<!-- body 最后 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-weui.min.js"></script>
+<script src="js/common.js"></script>
+
+<script>
+
+	document.getElementById("gonghao").focus();
+	
+	var openId = getOpenIdFromCookie(); 	
+	//openId = "123";
+	
+	/*init();*/
+	validateBind();
+	
+	//验证是否已经绑定过
+	function validateBind(){
+		var url = "/api/forward/validateBanding";
+		$.ajax({
+			url: url,
+			data:{
+				fromuser:openId
+			},
+			type:'GET',
+			success:function(data){				
+				var result = JSON.parse(data.data);				
+				if(result.rcode=="1"){
+					$.toptip('已绑定，即将跳转到详情页', 'success');
+					setTimeout(function(){
+						window.location.href="info_1.html";
+					},700);
+				}
+			}
+		});
+	}
+
+
+	//绑定
+	function banding(){
+		var empcode = $("#gonghao").val();
+		if(empcode == null || empcode==""){
+			$.toptip('请输入您的工号', 'warning');
+			document.getElementById("gonghao").focus();
+			return;
+		}
+		 
+		var empname = $("#xingming").val();
+		if(empname == null || empname == ""){
+			$.toptip('请输入您的姓名', 'warning');
+			document.getElementById("xingming").focus();
+			return;
+		}
+		var url = "/api/forward/banding";
+		$.ajax({
+			url: url,
+			data:{
+				openid:openId,
+				stuno:empcode,
+				stuname:empname
+			},
+			type:'GET',
+			success:function(data){				
+				var result = JSON.parse(data.data);	
+				if(result.rcode=="1"){
+					$.toptip('绑定成功，即将跳转到详情页', 'success');
+					setTimeout(function(){
+						window.location.href="info_1.html";
+					},700);
+				}else{
+					$.toptip(result.desc, 'warning');
+					return;
+				}
+			}
+		});
+	}
+ 
+ 
+</script>
+</html>

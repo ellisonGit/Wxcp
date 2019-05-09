@@ -25,6 +25,7 @@ public class TemplateMsgUtil {
         if(token == null || "".equals(token)){
             token = WxServerUtil.getAccessToken(WechatAccount.HNJCA.getAppId(),WechatAccount.HNJCA.getSecret());
             AccessTokenUtil.accessToken.setAccess_token(token);
+            System.out.println("打印token:"+token);
         }
         if(token == null || "".equals(token)){
             System.out.println("-----------------------------");

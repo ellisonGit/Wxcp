@@ -13,6 +13,11 @@ public class MyConfig {
 
 	// 一卡通平台地址
 	public static final String ICARD_URL = CommonUtil.get("url");
+	//域名
+	public static final String yuUrl = CommonUtil.get("yuUrl");
+	//访问地址
+	public static final String	comUrl=CommonUtil.get("comUrl");
+
 
 
 }
