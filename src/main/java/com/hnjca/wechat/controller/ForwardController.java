@@ -31,6 +31,7 @@ public class ForwardController {
     public ResponseInfo banding(String openid,String stuno,String stuname){
 
         if(openid == null || "".equals(openid)){
+            System.out.println("没有获取到openId");
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
 
@@ -42,7 +43,7 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NO_STUNAME_lowercase,-1);
         }
 
-        String url = MyConfig.ICARD_URL+ "/binding.action";
+        String url = MyConfig.ICARD_URL+ "/openIdBanding";
         String result = MyRequestUtil.sendPost(url,"openid="+openid+"&stuno="+stuno+"&stuname="+stuname);
 
         System.out.println("绑定结果:"+result);
@@ -52,35 +53,35 @@ public class ForwardController {
 
     /**
      * 验证是否该openid已经有绑定
-     * @param fromuser
+     * @param openId
      * @return
      */
     @GetMapping(value = "/validateBanding")
-    public ResponseInfo validateBanding(String fromuser){
+    public ResponseInfo validateBanding(String openId){
 
-        if(fromuser == null || "".equals(fromuser)){
+        if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
-        String url = MyConfig.ICARD_URL+ "/validateBind.action";
-        String result = MyRequestUtil.sendPost(url,"fromuser="+fromuser);
+        String url = MyConfig.ICARD_URL+ "/verificationBanding";
+        String result = MyRequestUtil.sendPost(url,"fromuser="+openId);
 
         return new ResponseInfo(InfoEnum.SUCCESS,result);
     }
 
     /**
-     * 通过openid 获取一卡通信息
-     * @param fromuser
+     * 通过openid 获取员工基本信息
+     * @param openId
      * @return
      */
     @GetMapping(value = "/queryCardInfo")
-    public ResponseInfo queryCardInfo(String fromuser){
+    public ResponseInfo queryCardInfo(String openId){
 
-        if(fromuser == null || "".equals(fromuser)){
+        if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
 
-        String url = MyConfig.ICARD_URL+ "/queryCardInfo.action";
-        String result = MyRequestUtil.sendPost(url,"fromuser="+fromuser);
+        String url = MyConfig.ICARD_URL+ "/userInfo";
+        String result = MyRequestUtil.sendPost(url,"openId="+openId);
 
         return new ResponseInfo(InfoEnum.SUCCESS,result);
     }

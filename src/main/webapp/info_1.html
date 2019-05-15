@@ -495,7 +495,8 @@ html{
 	validateBind();
 	loadUserInfo();
 	var userInfoArr = ["",""] ;
-	
+	var name="";
+	var sno="";
 	//判断是否页面有参数值，用于决定显示哪一个tab
 	var tabValue = getQueryString("t");
 	if(tabValue == null){
@@ -852,7 +853,7 @@ html{
 	function showUserInfo(){
 		$.modal({
 		  title: "用户基础信息",
-		  text: "<div class=\"user_info_css\">姓名："+userInfoArr[0]+"<br/>工号："+userInfoArr[1]+"<br/></div>"
+		  text: "<div class=\"user_info_css\">姓名："+name+"<br/>工号："+sno+"<br/></div>"
 		});
 	}
 		
@@ -862,13 +863,15 @@ html{
 		$.ajax({
 			url: url,
 			data:{
-				fromuser:openId
+				openId:openId
 			},
 			type:'GET',
 			success:function(data){				
-				var result = JSON.parse(data.data);	
-				userInfoArr = [result.empname,result.empcode];
-				$("#userName").html(result.empname);
+				var result = JSON.parse(data.data);
+				name=result.data.sname;
+				sno=result.data.jobNo;
+				/*userInfoArr = [result.empname,result.empcode];
+				$("#userName").html(result.empname);*/
 			}
 		});
 	}

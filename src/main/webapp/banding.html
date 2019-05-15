@@ -97,12 +97,12 @@ html , body{
 		$.ajax({
 			url: url,
 			data:{
-				fromuser:openId
+				openId:openId
 			},
 			type:'GET',
 			success:function(data){				
 				var result = JSON.parse(data.data);				
-				if(result.rcode=="1"){
+				if(result.code=="000002"){
 					$.toptip('已绑定，即将跳转到详情页', 'success');
 					setTimeout(function(){
 						window.location.href="info_1.html";
@@ -139,7 +139,7 @@ html , body{
 			type:'GET',
 			success:function(data){				
 				var result = JSON.parse(data.data);	
-				if(result.rcode=="1"){
+				if(result.code=="000002"){
 					$.toptip('绑定成功，即将跳转到详情页', 'success');
 					setTimeout(function(){
 						window.location.href="info_1.html";

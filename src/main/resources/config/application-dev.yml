@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8089
   tomcat:
     max-threads: 800
     max-http-header-size: 8192
