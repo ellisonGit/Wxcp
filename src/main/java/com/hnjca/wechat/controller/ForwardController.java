@@ -1,13 +1,18 @@
 package com.hnjca.wechat.controller;
 
+import com.alibaba.druid.support.json.JSONParser;
 import com.hnjca.wechat.enums.InfoEnum;
 import com.hnjca.wechat.util.DateUtil;
 import com.hnjca.wechat.util.MyConfig;
 import com.hnjca.wechat.util.MyRequestUtil;
 import com.hnjca.wechat.vo.ResponseInfo;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Description: 转发请求到一卡通平台
@@ -57,14 +62,14 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/validateBanding")
-    public ResponseInfo validateBanding(String openId){
+    public ResponseInfo validateBanding(String openId) throws UnsupportedEncodingException {
 
         if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
         String url = MyConfig.ICARD_URL+ "/verificationBanding";
-        String result = MyRequestUtil.sendPost(url,"fromuser="+openId);
-
+        String result = MyRequestUtil.sendPost(url,"openId="+openId);
+        result   = URLDecoder.decode(result,"utf-8");
         return new ResponseInfo(InfoEnum.SUCCESS,result);
     }
 
@@ -167,6 +172,74 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NET_ERROR,"网络异常，请检查网络后重试！");
         }else{
             return new ResponseInfo(InfoEnum.SUCCESS,month,result);
+        }
+    }
+
+    /**
+     * 余额
+     * @param openId
+     *
+     * @return
+     */
+    @GetMapping(value = "/getYuE")
+    public ResponseInfo getYuE(String openId){
+
+        if(openId == null || "".equals(openId)){
+            return new ResponseInfo(InfoEnum.NO_OPENID,-1);
+        }
+        String url = MyConfig.ICARD_URL+ "/getYuE";
+        String result = MyRequestUtil.sendGet(url,"openId="+openId);
+
+        if(result.equals("-1")){
+            return new ResponseInfo(InfoEnum.NET_ERROR,"网络异常，请检查网络后重试！");
+        }else{
+            return new ResponseInfo(InfoEnum.SUCCESS,result);
+        }
+    }
+
+    /**
+     * 支出，充值
+     * @param openId
+     * @return
+     */
+    @GetMapping(value = "/getSum")
+    public ResponseInfo getSum(String openId,String month){
+
+        if(openId == null || "".equals(openId)){
+            return new ResponseInfo(InfoEnum.NO_OPENID,-1);
+        }
+        String url = MyConfig.ICARD_URL+ "/getSum";
+        String result = MyRequestUtil.sendGet(url,"openId="+openId+"&month="+month);
+
+        if(result.equals("-1")){
+            return new ResponseInfo(InfoEnum.NET_ERROR,"网络异常，请检查网络后重试！");
+        }else{
+            return new ResponseInfo(InfoEnum.SUCCESS,result);
+        }
+    }
+
+
+    /**
+     * 列表
+     * @param openId
+     * @return
+     */
+    @GetMapping(value = "/getXList")
+    public ResponseInfo getSum(String openId,String type,String month){
+
+        if(openId == null || "".equals(openId)){
+            return new ResponseInfo(InfoEnum.NO_OPENID,-1);
+        }
+        if(type == null || "".equals(type)){
+            return new ResponseInfo(InfoEnum.NO_OPENID,-1);
+        }
+        String url = MyConfig.ICARD_URL+ "/getXList";
+        String result = MyRequestUtil.sendPost(url,"openId="+openId+"&type="+type+"&month="+month);
+
+        if(result.equals("-1")){
+            return new ResponseInfo(InfoEnum.NET_ERROR,"网络异常，请检查网络后重试！");
+        }else{
+            return new ResponseInfo(InfoEnum.SUCCESS,result);
         }
     }
 }

@@ -27,8 +27,8 @@ public class MyRequestUtil {
 	                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 	            connection.setRequestProperty("Accept-Charset", "utf-8");
 	            connection.setRequestProperty("contentType", "utf-8");
-	            connection.setConnectTimeout(3000);  
-	            connection.setReadTimeout(3000);  
+	            connection.setConnectTimeout(20000);
+	            connection.setReadTimeout(20000);
 	            // 建立实际的连接
 	            connection.connect();
 	            // 获取所有响应头字段

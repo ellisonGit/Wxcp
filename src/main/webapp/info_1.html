@@ -396,8 +396,8 @@ html{
 				<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAYAAAB8ZH1oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTMyIDc5LjE1OTI4NCwgMjAxNi8wNC8xOS0xMzoxMzo0MCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUuNSAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTQwRjE0QzdEQkI3MTFFNzhFOURFRThDMkUyNjI2RjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTQwRjE0QzhEQkI3MTFFNzhFOURFRThDMkUyNjI2RjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNDBGMTRDNURCQjcxMUU3OEU5REVFOEMyRTI2MjZGMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNDBGMTRDNkRCQjcxMUU3OEU5REVFOEMyRTI2MjZGMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PnxdXL0AAABISURBVHjaYrSxsWFnYGDYAMQeDNjBDiAOYAISP0EMqABWRSA1TFABmOLt2BSBOCxIEiCBQCBeD8SMyIrQFSIrZkBWBAIAAQYAw0UQUrTBTsYAAAAASUVORK5CYII=" />
 			</div>
 			<ul id="xialalan">
-				<li><a href="javascript:void(0);changeXiaofeiType('2')">消费</a></li>
-				<li><a href="javascript:void(0);changeXiaofeiType('1')">充值</a></li>
+				<li><a href="javascript:void(0);changeXiaofeiType('1')">消费</a></li>
+				<li><a href="javascript:void(0);changeXiaofeiType('2')">充值</a></li>
 			</ul>
 		</div>
 		<!-- <div class="yuezhangdan">月账单＞</div> -->
@@ -413,6 +413,7 @@ html{
 			<text>支出:<zhichu>0.00</zhichu></text>
 			&nbsp;&nbsp;&nbsp;
 			<text>充值:<chongzhi>0.00</chongzhi></text>
+
 		</div>
 		<div class="right">
 			<label for="month_value">				 
@@ -478,7 +479,7 @@ html{
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-weui.min.js"></script>
 <script src="js/fastclick.js"></script>
-<script src="js/common.js"></script>
+<script src="js/common.js?no=001"></script>
 <script>
   $(function() {
     FastClick.attach(document.body);
@@ -507,6 +508,7 @@ html{
 	var pageSize = 10;
 	//当前月份 yyyyMM
 	var month = getNowMonth();
+
 	 
 	
 	var monthForButton = month.substr(0,4)+" "+month.substr(4,2);
@@ -519,7 +521,9 @@ html{
 	//调用切换tab页方法
 	qiehuan(tabValue);	 
 	loadChuruRecord(0,pageSize,month);
-	loadXiaofeiRecord(0,pageSize,month);
+	loadXiaofeiRecord();
+	loadYuE();
+	loadSum();
 	
 	//切换tab页
 	function qiehuan(index){
@@ -534,14 +538,14 @@ html{
 		$("#tab"+index).removeClass("hide");
 		
 		//加载对应的tab数据
-		/**
+
 		if(index == 1){
-			loadChuruRecord(0,pageSize,month);
+			loadChuruRecord(1);
 		}else if(index == 2){
-			loadXiaofeiRecord(0,pageSize,month);
+			loadXiaofeiRecord(0);
 		}
-		**/		
-		
+
+
 		//设置滚动层的高度
 		getHeight(index);		
 	}
@@ -564,7 +568,7 @@ html{
 				return ;
 			}	
 			tab2ScrollStatus = 1;
-			$("#load_more2").removeClass("hide");				
+			$("#load_more2").removeClass("hide");
 			if(totalCount2 <= lastRecordNum2){
 				$("#load_more2").addClass("hide");
 				$("#no_more2").removeClass("hide");
@@ -579,78 +583,134 @@ html{
 	});
 	
 	//加载消费数据
-	function loadXiaofeiRecord(start,pageSize,month){
-		var url = "/api/forward/queryConsumeByPage";
-		if(month == null || month == ""){
-			month = "now";
-		}
-		$.ajax({
-			url: url,
-			data:{
-				fromuser:openId,
-				start : start,
-				pageSize : pageSize,
-				month : month ,
-				type : xiaofeiType
-			},
-			type:'GET',
-			success:function(data){				
-				var result = JSON.parse(data.data);	
-				if(result.rcode=="1"){
-					$(".my_yue span").html(result.balance);					
-					$("zhichu").html(result.sumConsume == null ? 0 : result.sumConsume);
-					$("chongzhi").html(result.sumRecharge == null ? 0 : result.sumRecharge);
-					
-					totalCount2 = result.totalCount;
-					lastRecordNum2 = result.lastRecordNum;
-					 
-					if(start == 0){						
-						$("#data_list2_inner").empty();
-						$("#load_more2").removeClass("hide");
-						$("#no_more2").addClass("hide");
-						tab2ScrollStatus = 0;
-						setTimeout(function(){
-							var length = result.data.length;
-							if(length == 0){						
-								$("#no_more2 .weui-loadmore__tips").html("没有了");
-								$("#load_more2").addClass("hide");
-								$("#no_more2").removeClass("hide");
-								return ;
-							}
-						
-							for(var i=0;i < length;i++){
-								var data1 = result.data[i];
-								$("#data_list2_inner").append("<div class=\"weui-cell\"><div class=\"weui-cell__hd xiaofei_word1\">"
-								+"<span>"+data1.ZDMC+"</span><div class=\"clear5\"></div><text>"+youhuaDateStr(data1.TR_DATE)+"</text>"
-								+"&nbsp;&nbsp;&nbsp;<text>"+youhuaTimeStr(data1.TR_TIME)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+youhuaMoney(data1.TR_MONEY)+"</span>元</div>"
-								+"</div>");
-							}	
-							
-							if(result.totalCount <= result.lastRecordNum){
-								$("#load_more2").addClass("hide");
-								$("#no_more2").removeClass("hide");
-							}
-						},500);		
-					}else{
+	function loadXiaofeiRecord(type,paramMonth){
+		if(type==1){
+			if(paramMonth == null || paramMonth == ""){
+				paramMonth = getTime();
+				//alert(paramMonth);
+			}
+			$('#data_list2_inner').html("");
+			var url = "/api/forward/getXList";
+
+			$.ajax({
+				async: true,
+				url: url,
+				data:{
+					openId:openId,
+					type : type,
+					month:paramMonth
+				},
+				type:'GET',
+				beforeSend: function(){
+				($('#load_more2').show());
+				},
+
+				success:function(data){
+					$('#data_list2_inner').text('');
+					$('#load_more2').hide();
+					var result = JSON.parse(data.data);
+					if(result.code=="000001"){
 						var length = result.data.length;
 						for(var i=0;i < length;i++){
 							var data1 = result.data[i];
+							var xiaof="消费";
 							$("#data_list2_inner").append("<div class=\"weui-cell\"><div class=\"weui-cell__hd xiaofei_word1\">"
-								+"<span>"+data1.ZDMC+"</span><div class=\"clear5\"></div><text>"+youhuaDateStr(data1.TR_DATE)+"</text>"
-								+"&nbsp;&nbsp;&nbsp;<text>"+youhuaTimeStr(data1.TR_TIME)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+youhuaMoney(data1.TR_MONEY)+"</span>元</div>"
-								+"</div>");
+									+"<span>"+xiaof+"</span><div class=\"clear5\"></div><text>"+timestampToTime(data1.createTime)+"</text>"
+									+"&nbsp;&nbsp;&nbsp;<text>"+timestampToTime2(data1.createTime)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+toDecimal2(data1.money)+"</span>元</div>"
+									+"</div>");
 						}
-						
-						if(result.totalCount <= result.lastRecordNum){
-							$("#load_more2").addClass("hide");
-							$("#no_more2").removeClass("hide");
-						}
-					}					
+					}
 				}
+			});
+		}
+
+		if(type==2){ //充值
+			$('#data_list2_inner').html("");
+			var url = "/api/forward/getXList";
+			if(paramMonth == null || paramMonth == ""){
+				paramMonth = getTime();
 			}
-		});
+			$.ajax({
+				url: url,
+				data:{
+					openId:openId,
+					type : type,
+					month:paramMonth
+				},
+				type:'GET',
+				beforeSend: function(){
+					($('#load_more2').show());
+				},
+				success:function(data){
+					$('#data_list2_inner').text('');
+					$('#load_more2').hide();
+					var result = JSON.parse(data.data);
+					if(result.code=="000001"){
+						var length = result.data.length;
+						for(var i=0;i < length;i++){
+							var data1 = result.data[i];
+							var xiaof="充值";
+							$("#data_list2_inner").append("<div class=\"weui-cell\"><div class=\"weui-cell__hd xiaofei_word1\">"
+									+"<span>"+xiaof+"</span><div class=\"clear5\"></div><text>"+timestampToTime(data1.opDate)+"</text>"
+									+"&nbsp;&nbsp;&nbsp;<text>"+timestampToTime2(data1.opDate)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+toDecimal2(data1.chargeMoney)+"</span>元</div>"
+									+"</div>");
+						}
+					}
+				}
+			});
+		}
+
+		if(type==0){ //加载全部
+			$('#data_list2_inner').html("");
+			var url = "/api/forward/getXList";
+			if(paramMonth == null || paramMonth == ""){
+				paramMonth = getTime();
+			}
+			$.ajax({
+				url: url,
+				data:{
+					openId:openId,
+					type : type,
+					month:paramMonth
+				},
+				type:'GET',
+				beforeSend: function(){
+					($('#load_more2').show());
+				},
+
+				success:function(data){
+					$("#load_more2").addClass("hide");
+					var result = JSON.parse(data.data);
+					var xiaof="消费";
+					var chongz="充值";
+					if(result.code=="000001"){
+						var length = result.data.length;
+						for(var i=0;i < length;i++) {
+							var data1 = result.data[i];
+							var le = data1.length;
+							for (var j = 0; j < le; j++) {
+								var data2 = data1[j];
+								if(data2.money!=null){
+									$("#data_list2_inner").append("<div class=\"weui-cell\"><div class=\"weui-cell__hd xiaofei_word1\">"
+											+"<span>"+xiaof+"</span><div class=\"clear5\"></div><text>"+timestampToTime(data2.createTime)+"</text>"
+											+"&nbsp;&nbsp;&nbsp;<text>"+timestampToTime2(data2.createTime)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+toDecimal2(data2.money)+"</span>元</div>"
+											+"</div>");
+								}else {
+								$("#data_list2_inner").append("<div class=\"weui-cell\"><div class=\"weui-cell__hd xiaofei_word1\">"
+										+"<span>"+chongz+"</span><div class=\"clear5\"></div><text>"+timestampToTime(data2.opDate)+"</text>"
+										+"&nbsp;&nbsp;&nbsp;<text>"+timestampToTime2(data2.opDate)+"</text></div><div class=\"weui-cell__bd xiaofei_word2\"><span>"+toDecimal2(data2.chargeMoney)+"</span>元</div>"
+										+"</div>");
+								}
+							}
+						}
+					}
+				}
+
+			});
+
+		}
 	}
-	
+
 	//tab1的中记录数	
 	var totalCount1 = 0;
 	//tab1的下一页起始位置
@@ -692,7 +752,7 @@ html{
 		$.ajax({
 			url: url,
 			data:{
-				fromuser:openId,
+				openId:openId,
 				start : start,
 				pageSize : pageSize,
 				month : month 
@@ -757,22 +817,67 @@ html{
 				}
 			}
 		});
-	} 
-	 
-	  
-	 
+	}
+
+
+	//加载余额数据
+	function loadYuE() {
+		var url = "/api/forward/getYuE";
+		$.ajax({
+			async: false,
+			url: url,
+			data: {
+				openId: openId,
+			},
+			type: 'GET',
+			success: function (data) {
+				//alert(JSON.parse(data.data));
+				var result = JSON.parse(data.data);
+				if (result.code == "000001") {
+                     //alert(result.data);
+					$(".my_yue span").html(result.data);
+				}
+			}
+		});
+	}
+
+	//加载支出，充值数据
+	function loadSum(paramMonth) {
+		var url = "/api/forward/getSum";
+		if(paramMonth == null || paramMonth == ""){
+			paramMonth = getTime();
+		}
+		$.ajax({
+			async: true,
+			url: url,
+			data: {
+				openId: openId,
+				month:paramMonth
+			},
+			type: 'GET',
+			success: function (data) {
+				var result = JSON.parse(data.data);
+				if (result.code == "000001") {
+					//alert(result.data.money);
+					$("zhichu").html(result.data.money== null ? 0 : result.data.money);
+					$("chongzhi").html(result.data.remainMoney == null ? 0 : result.data.remainMoney);
+				}
+			}
+		});
+	}
+
 	//验证是否已经绑定过
 	function validateBind(){
 		var url = "/api/forward/validateBanding"; 
 		$.ajax({
 			url: url,
 			data:{
-				fromuser:openId
+				openId:openId
 			},
 			type:'GET',
 			success:function(data){				
 				var result = JSON.parse(data.data);				
-				if(result.rcode=="0"){
+				if(result.code=="100001"){
 					window.location.href="http://llison.viphk.ngrok.org/api/hnjca/auth?returnUrl=http://llison.viphk.ngrok.org/api/banding.html";
 				}
 			}
@@ -807,7 +912,7 @@ html{
            $("#rili").html(newMonth);		   
 		   var paramMonth = result.replace(",","");
 		   
-		   loadChuruRecord(0,pageSize,paramMonth);				
+		   loadChuruRecord(0,pageSize);
 		   tab1ScrollStatus = 0;
         }
     }); 
@@ -830,9 +935,9 @@ html{
 		   var newMonth = result.replace(",","-");
 		   
            $("#month_value").html(newMonth);
-		   var paramMonth = result.replace(",","");
-		   
-		   loadXiaofeiRecord(0,pageSize,paramMonth);				
+		   var paramMonth = result.replace(",","-");
+		   loadXiaofeiRecord(1,paramMonth);
+		   loadSum(paramMonth);
 		   tab2ScrollStatus = 0;
         }
     });
@@ -870,8 +975,6 @@ html{
 				var result = JSON.parse(data.data);
 				name=result.data.sname;
 				sno=result.data.jobNo;
-				/*userInfoArr = [result.empname,result.empcode];
-				$("#userName").html(result.empname);*/
 			}
 		});
 	}
@@ -880,9 +983,10 @@ html{
 	function changeXiaofeiType(type){
 		xiaofeiType = type;
 		var paramMonth = $("#month_value").val();
-		paramMonth = paramMonth.replace(" ","");
+		paramMonth = paramMonth.replace(" ","-");
+
 		$("#xialalan").hide();
-		loadXiaofeiRecord(0,pageSize,paramMonth);	
+		loadXiaofeiRecord(type,paramMonth);
 	}
 </script>
 </html>

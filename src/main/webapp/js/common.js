@@ -64,6 +64,29 @@ function youhuaDateStr(dateStr){
 	}	
 }
 
+//将时间戳转日期格式
+function timestampToTime(timestamp) {
+	var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+	var Y = date.getFullYear() + '-';
+	var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+	var D = date.getDate() < 10 ?  '0'+date.getDate()+ ' ' : date.getDate()+ ' ';
+	var h = date.getHours() < 10 ? '0'+date.getHours()+ ':' : date.getHours()+ ':';
+	var m = date.getMinutes() < 10 ? '0'+date.getMinutes()+ ':' : date.getMinutes()+ ':';
+	var s = date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds();
+	return M+D;
+}
+//将时间戳转日期格式
+function timestampToTime2(timestamp) {
+	var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+	var Y = date.getFullYear() + '-';
+	var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+	var D = date.getDate() < 10 ?  '0'+date.getDate()+ ' ' : date.getDate()+ ' ';
+	var h = date.getHours() < 10 ? '0'+date.getHours()+ ':' : date.getHours()+ ':';
+	var m = date.getMinutes() < 10 ? '0'+date.getMinutes()+ ':' : date.getMinutes()+ ':';
+	var s = date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds();
+	return h+m+s;
+}
+
 //优化时间显示
 function youhuaTimeStr(timeStr){
 	return timeStr.substr(0,2)+":"+timeStr.substr(2,2)+":"+timeStr.substr(4,2);
@@ -77,8 +100,39 @@ function getNowMonth(){
 	if(month < 10){
 		month = "0"+month;
 	}
-	
+
 	return year+month;
+}
+
+//获取当天的月份格式 yyyyMM
+function getTime(){
+	var myDate = new Date();
+	var year = myDate.getFullYear()+"";
+	var month = myDate.getMonth()+1+"";
+	if(month < 10){
+		month = "0"+month;
+	}
+
+	return year+"-"+month;
+}
+
+//将金额保留两位小数
+function toDecimal2(x) {
+	var f = parseFloat(x);
+	if (isNaN(f)) {
+		return false;
+	}
+	var f = Math.round(x*100)/100;
+	var s = f.toString();
+	var rs = s.indexOf('.');
+	if (rs < 0) {
+		rs = s.length;
+		s += '.';
+	}
+	while (s.length <= rs + 2) {
+		s += '0';
+	}
+	return s;
 }
 
 //优化金额显示
@@ -93,5 +147,11 @@ function youhuaMoney(moneyStr){
 	}
 	if(str.length == 3){
 		return moneyStr;
-	}	
+	}
+	if(str.length == 4){
+		return  (moneyStr * 1000)/1000;
+	}
+	if(str.length == 5){
+		return moneyStr-00;
+	}
 }

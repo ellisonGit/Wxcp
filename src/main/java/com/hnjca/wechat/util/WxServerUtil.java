@@ -24,7 +24,7 @@ public class WxServerUtil {
 
 		HttpClient clientT = new HttpClient();
 		PostMethod post = new PostMethod(String.format(WXConfig.getAccessTokenUrl,appid,secret));
-		System.out.println("获取token地址："+String.format(WXConfig.getAccessTokenUrl,appid,secret));
+		System.out.println("获取token地址：ellison"+String.format(WXConfig.getAccessTokenUrl,appid,secret));
 		HttpClientParams httparams = new HttpClientParams();
 		httparams.setSoTimeout(15000);
 		httparams.setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(0, false));
