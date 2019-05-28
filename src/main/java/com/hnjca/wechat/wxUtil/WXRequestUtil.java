@@ -1,6 +1,8 @@
 package com.hnjca.wechat.wxUtil;
 
 
+import com.hnjca.wechat.util.MD5Util;
+import com.hnjca.wechat.util.MyConfig;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 
 
@@ -62,13 +64,13 @@ public class WXRequestUtil {
 	   * @param key                 微信APPID
 	   * @return					sign
 	   */
-	  public static String createSign(String characterEncoding,SortedMap<String,Object> parameters,String key){
+	  public static String createSign(String characterEncoding,Map<String,String> parameters,String key){
 
 		  StringBuffer sb = new StringBuffer();
-		  Set<Entry<String,Object>> es = parameters.entrySet();  
-		  Iterator<Entry<String,Object>> it = es.iterator();  
+		  Set<Entry<String,String>> es = parameters.entrySet();
+		  Iterator<Entry<String,String>> it = es.iterator();
 		  while(it.hasNext()) {  
-           Entry<String,Object> entry = (Entry<String,Object>)it.next();
+           Entry<String,String> entry = (Entry<String,String>)it.next();
            String k = (String)entry.getKey();  
            Object v = entry.getValue();  
            if(null != v && !"".equals(v)  
@@ -79,7 +81,7 @@ public class WXRequestUtil {
 		  sb.append("key=" + key);  
 		  //String sign  = MD5Util.getMessageDigest(sb.toString().getBytes());
 		  System.out.println(">>>>加密前"+sb.toString());
-	      String sign = "MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase()";
+	      String sign = MD5Util.MD5Encodeto(sb.toString(), characterEncoding).toUpperCase();
 	      return sign;  
 	  }
        
@@ -103,14 +105,14 @@ public class WXRequestUtil {
  	 * @param
  	 * @return
  	 */
- 	public static SortedMap<String,Object>  initiatePay(SortedMap<String,Object> sortedMap){
- 		SortedMap<String,Object> resultMap = null;
+ 	public static Map<String,String>  initiatePay(Map<String,String> sortedMap){
+        Map<String,String> resultMap = null;
  		try {
  			String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
- 			String outXml = "StringUtil.getRequestXml(sortedMap)";
+ 			String outXml =WXPayUtil.mapToXml(sortedMap);
  			System.out.println("发送参数："+outXml);
- 			String requestXml = "";
- 			/*resultMap = StringUtil.doXMLParse(requestXml);*/
+ 			String requestXml = httpsRequest(url, "POST", outXml);
+ 			resultMap =WXPayUtil.xmlToMap(requestXml);
  			System.out.println("返回参数："+resultMap);
  		} catch (Exception e) {
  			e.printStackTrace();
@@ -122,51 +124,47 @@ public class WXRequestUtil {
       
       
     //微信统一下单参数设置  
-    public static Map<String,Object> WXParamGenerate(String description,String out_trade_no,double total_fee,String openid){
-        int fee = (int)(total_fee * 0.1);  
-        //String a="{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"https://pay.qq.com\",\"wap_name\": \"腾讯充值\"}}" ;
-        SortedMap<String, Object> param = new TreeMap<String, Object>();
-//        Map<String,String> param = new HashMap<String,String>();  
-        param.put("appid", "");
-        param.put("mch_id", "");
-        param.put("nonce_str","");  //随机字符串
-        param.put("body", description);  
-        param.put("out_trade_no",out_trade_no);  
-        param.put("total_fee", fee+"");  
-        param.put("spbill_create_ip", GetIp());  
-        param.put("notify_url", "WeixinConfig.notify_url");
+    public static Map<String,String> WXParamGenerate(String body,String out_trade_no,double total_fee,String openid) throws Exception {
+        int fee = (int)(total_fee * 0.1);
+        Map<String, String> param = new TreeMap<String, String>();
+        param.put("appid", MyConfig.APPID);//appid
+        param.put("mch_id",MyConfig.MCHID);//商户ID
+        param.put("nonce_str",WXPayUtil.generateNonceStr());  //随机字符串
+        param.put("body", body);//商品描述
+        param.put("out_trade_no",out_trade_no);//商户订单号
+        param.put("total_fee", fee+"");//金额
+        param.put("spbill_create_ip", GetIp());//终端IP
+        param.put("notify_url", MyConfig.notify_url);//回调接收支付信息地址
         param.put("trade_type", "JSAPI"); //公众号为JSAPI
-      //  param.put("product_id", product_id+"");  
-      // param.put("scene_info", a);
         param.put("openid", openid);
-         System.out.println("签名前数据："+param);
-        //String sign = GetSign(param);  
-       String sign =createSign("utf-8", param,"WeixinConfig.apiKey");
-        // String sign ="310232F58E372FDDEBF7C577EEF9F508";
-       //String sign =StringUtil.createSign("utf-8", parameters, key)
-        param.put("sign", sign);  
-        SortedMap<String, Object> result =  initiatePay(param);
-        System.out.println(result.toString());
-        return result;  
+        System.out.println("签名前数据："+param);
+        //String sign =createSign("utf-8", param,MyConfig.APIKEY);//apiKey
+        String sign =WXPayUtil.generateSignature(param,MyConfig.APIKEY);//apiKey
+        System.out.println("签名是否正确111："+WXPayUtil.isSignatureValid(param,MyConfig.APIKEY));
+        param.put("sign", sign);  //签名
+        Map<String, String> result =  initiatePay(param);
+        return result;
     }  
     
 
     
   //微信下单后参数设置  
-    public static Map<String,Object> WXOrderParam(String packageStr,String nonceStr){
-        SortedMap<String, Object> param = new TreeMap<String, Object>();
-        param.put("appId", "WeixinConfig.appid");  //公众号id
-        param.put("timeStamp",new Date().getTime() / 1000 );  //时间戳
-       // param.put("nonceStr",StringUtil.getRandomString(32));  //随机字符串
+    public static Map<String,String> WXOrderParam(String packageStr,String nonceStr) throws Exception {
+        Map<String, String> param = new TreeMap<String, String>();
+        param.put("appId",MyConfig.APPID);  //公众号id
+        param.put("timeStamp", createTimestamp());  //时间戳
         param.put("nonceStr",nonceStr);  //随机字符串
         param.put("package", packageStr);  //订单详情扩展字符串
         param.put("signType","MD5");  //签名方式
-        String sign =createSign("utf-8", param,"WeixinConfig.apiKey");
+        System.out.println("签名前数据2："+param);
+        String sign =WXPayUtil.generateSignature(param,MyConfig.APIKEY);//apiKey
         param.put("paySign", sign);  //签名
-        String timeStamp =  param.get("timeStamp").toString();
+        String timeStamp =  param.get("timeStamp");
         System.out.println("微信下单后参数设置随机字符串："+nonceStr);
         System.out.println("微信下单后参数设置时间："+timeStamp);
         System.out.println("微信下单后参数设置签名："+sign);
+
+        System.out.println("签名是否正确："+WXPayUtil.isSignatureValid(param,MyConfig.APIKEY));
         return param;  
     }  
     
@@ -259,4 +257,64 @@ public class WXRequestUtil {
 			return null;
 		}
 	}
+
+    public static String createTimestamp() {
+        return Long.toString(System.currentTimeMillis() / 1000);
+    }
+    //生成随机字符串
+    public static String createNonceStr() {
+        return UUID.randomUUID().toString();
+    }
+    public static  String convertStreamToString(InputStream is) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"));
+
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sb.toString();
+    }
+
+
+    /**
+     * xml组装
+     * @param parameters  集合 key value
+     * @return
+     */
+    public static String getRequestXml(SortedMap<String,Object> parameters){
+        StringBuffer sb = new StringBuffer();
+        sb.append("<xml>");
+        Set<Entry<String,Object>> es = parameters.entrySet();
+        Iterator<Entry<String,Object>> it = es.iterator();
+        while(it.hasNext()) {
+            Entry<String,Object> entry = (Entry<String,Object>)it.next();
+            String key = (String)entry.getKey();
+            String value = String.valueOf(entry.getValue());
+            if(!value.equals("null")){
+                if ("attach".equalsIgnoreCase(key)||"body".equalsIgnoreCase(key)||"sign".equalsIgnoreCase(key)) {
+                    sb.append("<"+key+">"+"<![CDATA["+value+"]]></"+key+">");
+                }else {
+                    sb.append("<"+key+">"+value+"</"+key+">");
+                }
+            }
+
+        }
+        sb.append("</xml>");
+        return sb.toString();
+    }
+
+
 }  

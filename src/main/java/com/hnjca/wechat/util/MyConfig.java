@@ -10,12 +10,11 @@ public class MyConfig {
 
 	// 微信相关
 	public static final String APPID = CommonUtil.get("appId");//1.appid
-	                                                           //2.mch_id
+	public static final String MCHID = CommonUtil.get("mchId");//2.mch_id
 	public static final String SECRET = CommonUtil.get("secret");
 	public static final String TOKEN = CommonUtil.get("token");
-	public static final String nonce_str = WXPayUtil.generateNonceStr();//随机字符串用
-	public static final String apiKey ="";//支付密钥Key
-
+	public static final String APIKEY =CommonUtil.get("apiKey");//支付密钥Key
+	public static final String notify_url = "http://llison.viphk.ngrok.org/api/weixin/wxUpdateOrder";//接收支付信息
 
 	// 一卡通平台地址
 	public static final String ICARD_URL = CommonUtil.get("url");

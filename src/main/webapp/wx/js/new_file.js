@@ -1,14 +1,15 @@
 var money='';
+var moneys='';
 var moneytoo='';
 var openId='';
 var  appId='';
 var timeStamp='';
 var nonceStr=''; //1随机串
-var package='';//1
+var packa='';//1
 var paySign=''//签名
-var Url_='';
+var Url_='http://llison.viphk.ngrok.org';
+var JobNo='';//工号
 $(function(){
-	var sno='';
 //获取openId
 	openId = getOpenIdFromCookie();
 	//验证是否已经绑定过
@@ -24,7 +25,7 @@ $(function(){
 				var result = JSON.parse(data.data);
               //  alert(result);
 				if(result=="-1"){
-					window.location.href="http://llison.viphk.ngrok.org/api/hnjca/auth?returnUrl=http://llison.viphk.ngrok.org/api/wxPay.html";
+					window.location.href=Url_+"/api/hnjca/auth?returnUrl="+Url_+"/api/wxPay.html";
 				}
 			}
 
@@ -100,8 +101,8 @@ $(function(){
 			type:'GET',
 			success:function(data){
 				var result = JSON.parse(data.data);
-				sno=result.data.jobNo;
-				$("#text1").html("工号:"+sno);
+				JobNo=result.data.jobNo;
+				$("#text1").html("工号:"+JobNo);
 			}
 		});
 	}
@@ -116,16 +117,49 @@ $(function(){
 			{
 				"appId":appId,     //公众号名称，由商户传入
 				"timeStamp":timeStamp,         //1时间戳，自1970年以来的秒数
-				"nonceStr":nonceStr, //1随机串
-				"package":package,//1
-				"signType":"MD5",         //微信签名方式：
-				"paySign":paySign //1微信签名
+				"nonceStr":nonceStr, //随机串
+				"package":packa,//
+				"signType": "MD5",        //微信签名方式：
+				"paySign":paySign //微信签名
 			},
 			function(res){
-				WeixinJSBridge.log(res.err_msg);
-				//alert(res.err_code+res.err_desc+res.err_msg);
+				if (res.err_msg == "get_brand_wcpay_request:ok") {
+					alert("支付成功");
+					console.log('支付成功');
+					//支付成功后跳转的页面
+				} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+					alert("支付取消");
+					console.log('支付取消');
+				} else if (res.err_msg == "get_brand_wcpay_request:fail") {
+					alert("支付失败");
+					console.log('支付失败');
+					WeixinJSBridge.call('closeWindow');
+				}
 			}
-		);
+
+
+		/*WeixinJSBridge.invoke('getBrandWCPayRequest', {
+				"appId": appId,     //公众号名称,由商户传入
+				"timeStamp": timeStamp,         //时间戳,自1970年以来的秒数
+				"nonceStr": nonceStr, //随机串
+				"package": package,
+				"signType": "MD5",         //微信签名方式：
+				"paySign": paySign //微信签名
+			},
+			function (res) {
+				if (res.err_msg == "get_brand_wcpay_request:ok") {
+					console.log('支付成功');
+					//支付成功后跳转的页面
+				} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+					console.log('支付取消');
+				} else if (res.err_msg == "get_brand_wcpay_request:fail") {
+					alert("支付失败1");
+					console.log('支付失败');
+					WeixinJSBridge.call('closeWindow');
+				} //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok,但并不保证它绝对可靠。*/
+			);
+
+
 	}
 //调用微信JS api 支付
 	function callpay() {
@@ -140,14 +174,23 @@ $(function(){
 			jsApiCall();
 		}
 	}
-//调用order微信公众号下单 最后一步
+//调用order微信公众号下单
 	function orderWx(){
-		moneyVip = $('.moneyVip').text();
-	 var body = '充值';
+
+		moneytoo=$(".person_wallet_recharge .ul li.current").text().replace(/(^\s*)|(\s*$)/g, "").substr(1);
+		if(moneytoo!==null && moneytoo!=''){
+			money = moneytoo;
+		}
+		moneys=$(".person_wallet_recharge #txt").val();
+		if(moneys!==null && moneys!=''){
+			money=moneys;
+		}
+		//alert(money);
+	 var body = '充值费';
 		$.ajax({
 			async: true,
 			type: "post",
-			url: "/weixin/order",
+			url: "/api/weixin/order",
 			dataType:"json",
 			contentType: "application/x-www-form-urlencoded;charset=UTF-8",
 			//headers: {"token": localStorage.getItem('car_token')},
@@ -155,17 +198,17 @@ $(function(){
 				xhr.setRequestHeader("token",cx_names);
 			},*/
 			data:{
-				"openid":openId,
-				"totalFee":money,
-				"body":body
+				"openId":openId,
+				"money":money,
+				"body":body,
+				"JobNo":JobNo
 			},
 			success: function (data) {
-				data_id =data.data.appId;
-				console.log(data.data);
-				sj = data.data.nonceStr; //随机数
-				sj_id = data.data.packageStr; //1
-				wx_name = data.data.paySign;   //1微信签名
-				gltime = data.data.timeStamp;   //格林时间
+				appId =data.appid;
+				nonceStr = data.nonce_str; //随机数
+				packa = data.package_str; //1
+				paySign = data.pay_sign;   //1微信签名
+				timeStamp = data.time_stamp;   //格林时间
 				callpay();
 			},
 			error:function(err){
