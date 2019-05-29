@@ -1,6 +1,8 @@
 package com.hnjca.wechat.controller;
 
 import com.hnjca.wechat.pojo.WxMultiRecharge;
+import com.hnjca.wechat.util.MyConfig;
+import com.hnjca.wechat.util.MyRequestUtil;
 import com.hnjca.wechat.wxUtil.WXPayUtil;
 import com.hnjca.wechat.wxUtil.WXRequestUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -77,6 +79,10 @@ public class WeixinController {
     @RequestMapping(value = "/wxUpdateOrder")
     public String wxUpdateOrder(HttpServletResponse response,
                                 HttpServletRequest request) {
+        String returnxml = "<xml>" +
+                "<return_code><![CDATA[SUCCESS]]></return_code>"+
+                "<return_msg><![CDATA[OK]]></return_msg>"+
+                "</xml>";
         try {
             String resultWX = WXRequestUtil.weixin_notify_para(request);
             Map<String, String> resultMap = WXPayUtil.xmlToMap(resultWX);
@@ -87,22 +93,25 @@ public class WeixinController {
             String transactionId=resultMap.get("transaction_id");
             int i = Integer.parseInt(totalFee);
             double fee=i*0.01;
-            BigDecimal recAmount=new BigDecimal(fee);
+            String recAmount=fee+"";
             String startTime=(String)resultMap.get("time_end");
             //String 转date
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = sdf.parse(startTime);
+            String url = MyConfig.ICARD_URL+ "/saveWxInfo";
+            String param="\"openId=\"+openid+\"&outTradeNo=\"+orderId+\"&money=\"+recAmount\n" +
+                    "                    +\"&createTime=\"+date+\"&uid=\"+transactionId";
+            String result = MyRequestUtil.sendPost(url,"openId="+openid+"&outTradeNo="+orderId+"&money="+recAmount+"&uid="+transactionId+"&createTime="+date);
 
+            System.out.println("结果:"+result);
 
+            return  returnxml;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         // 返回给微信的信息
-        String returnxml = "<xml>" +
-                "<return_code><![CDATA[SUCCESS]]></return_code>"+
-                "<return_msg><![CDATA[OK]]></return_msg>"+
-                "</xml>";
+
         return  returnxml;
     }
 
