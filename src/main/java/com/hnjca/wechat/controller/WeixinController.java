@@ -1,11 +1,15 @@
 package com.hnjca.wechat.controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hnjca.wechat.pojo.WxMultiRecharge;
 import com.hnjca.wechat.util.MyConfig;
 import com.hnjca.wechat.util.MyRequestUtil;
 import com.hnjca.wechat.wxUtil.WXPayUtil;
 import com.hnjca.wechat.wxUtil.WXRequestUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.hnjca.wechat.util.MyConfig.hostUrl;
 
 
 /**
@@ -77,8 +83,7 @@ public class WeixinController {
      * @return
      */
     @RequestMapping(value = "/wxUpdateOrder")
-    public String wxUpdateOrder(HttpServletResponse response,
-                                HttpServletRequest request) {
+    public String wxUpdateOrder(HttpServletResponse response, HttpServletRequest request) {
         String returnxml = "<xml>" +
                 "<return_code><![CDATA[SUCCESS]]></return_code>"+
                 "<return_msg><![CDATA[OK]]></return_msg>"+
@@ -94,24 +99,29 @@ public class WeixinController {
             int i = Integer.parseInt(totalFee);
             double fee=i*0.01;
             String recAmount=fee+"";
-            String startTime=(String)resultMap.get("time_end");
+            String startTime=resultMap.get("time_end");
             //String 转date
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = sdf.parse(startTime);
             String url = MyConfig.ICARD_URL+ "/saveWxInfo";
-            String param="\"openId=\"+openid+\"&outTradeNo=\"+orderId+\"&money=\"+recAmount\n" +
-                    "                    +\"&createTime=\"+date+\"&uid=\"+transactionId";
-            String result = MyRequestUtil.sendPost(url,"openId="+openid+"&outTradeNo="+orderId+"&money="+recAmount+"&uid="+transactionId+"&createTime="+date);
-
+            String result = MyRequestUtil.sendPost(url,"openId="+openid+"&outTradeNo="+orderId+"&money="+recAmount+"&uid="+transactionId+"&body="+startTime);
             System.out.println("结果:"+result);
-
+            //todo 将充值数据返回本地数据库
+            JsonParser jp = new JsonParser();
+            //将json字符串转化成json对象
+            JsonObject jo = jp.parse(result).getAsJsonObject();
+            //获取message对应的值
+           // String data = jo.get("data").getAsString();
+            String data = jo.get("data").getAsJsonObject().get("jobNo").getAsString();
+            System.out.println("message：" + data);
+            String hostUrl = MyConfig.hostUrl+ "/saveInfo";
+            String res = MyRequestUtil.sendGet(hostUrl,"deposit="+recAmount+"&empId="+data+"&cardSn="+orderId);//param金额，工号
+            System.out.println("微信充值补贴结果:"+res);
             return  returnxml;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         // 返回给微信的信息
-
         return  returnxml;
     }
 

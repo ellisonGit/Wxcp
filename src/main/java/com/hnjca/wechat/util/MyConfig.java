@@ -22,7 +22,8 @@ public class MyConfig {
 	public static final String yuUrl = CommonUtil.get("yuUrl");
 	//访问地址
 	public static final String	comUrl=CommonUtil.get("comUrl");
-
+	//访问本地地址
+	public static final String	hostUrl=CommonUtil.get("hostUrl");
 
 
 }

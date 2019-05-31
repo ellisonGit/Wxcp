@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Description: 转发请求到一卡通平台
@@ -63,13 +65,17 @@ public class ForwardController {
      */
     @GetMapping(value = "/validateBanding")
     public ResponseInfo validateBanding(String openId) throws UnsupportedEncodingException {
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        System.out.println("star"+df.format(new Date()));// new Date()为获取当前系统时间
         if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
         String url = MyConfig.ICARD_URL+ "/verificationBanding";
-        String result = MyRequestUtil.sendPost(url,"openId="+openId);
+        String result = MyRequestUtil.sendGet(url,"openId="+openId);
         result   = URLDecoder.decode(result,"utf-8");
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        System.out.println("end"+df.format(new Date()));// new Date()为获取当前系统时间
+        System.out.println("验证是否该openid已经有绑定"+result);// new Date()为获取当前系统时间
         return new ResponseInfo(InfoEnum.SUCCESS,result);
     }
 
@@ -226,7 +232,8 @@ public class ForwardController {
      */
     @GetMapping(value = "/getXList")
     public ResponseInfo getSum(String openId,String type,String month){
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        System.out.println("開始時間"+df.format(new Date()));// new Date()为获取当前系统时间
         if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
@@ -234,11 +241,13 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
         String url = MyConfig.ICARD_URL+ "/getXList";
-        String result = MyRequestUtil.sendPost(url,"openId="+openId+"&type="+type+"&month="+month);
+        String result = MyRequestUtil.sendGet(url,"openId="+openId+"&type="+type+"&month="+month);
 
         if(result.equals("-1")){
             return new ResponseInfo(InfoEnum.NET_ERROR,"网络异常，请检查网络后重试！");
         }else{
+            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            System.out.println("查詢列表結束時間"+df2.format(new Date()));// new Date()为获取当前系统时间
             return new ResponseInfo(InfoEnum.SUCCESS,result);
         }
     }

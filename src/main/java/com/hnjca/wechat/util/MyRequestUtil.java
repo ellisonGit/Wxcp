@@ -27,8 +27,8 @@ public class MyRequestUtil {
 	                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 	            connection.setRequestProperty("Accept-Charset", "utf-8");
 	            connection.setRequestProperty("contentType", "utf-8");
-	            connection.setConnectTimeout(20000);
-	            connection.setReadTimeout(20000);
+	            connection.setConnectTimeout(3000);//  连接主机的超时时间（单位：毫秒）
+	            connection.setReadTimeout(20000); //从主机读取数据的超时时间（单位：毫秒）
 	            // 建立实际的连接
 	            connection.connect();
 	            // 获取所有响应头字段

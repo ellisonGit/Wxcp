@@ -1,105 +1,29 @@
 package com.hnjca.wechat.wxUtil;
-
-
-import com.hnjca.wechat.util.MD5Util;
 import com.hnjca.wechat.util.MyConfig;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.security.MessageDigest;
 import java.util.*;
-import java.util.Map.Entry;
-
 /*
  * 用户发起统一下单请求
  * 作者：cjl
  */
 public class WXRequestUtil {
 
-    
-
-
-	public static String getUrl(HttpServletRequest request){/*
-		HttpServletRequest httpRequest=(HttpServletRequest)request;
-		String strBackUrl = "http://" + request.getServerName()
-		+ httpRequest.getContextPath()
-		+ httpRequest.getServletPath();
-		System.out.println("strBackUrl: " + strBackUrl);*/
-		String url = request.getScheme() +"://" + request.getServerName()  
-                + request.getServletPath();
-		if (request.getQueryString() != null){
-			url += "?" + request.getQueryString();
-		}
-		System.out.println("微信url地址："+url);
-		return url;
-	}
-
-      
-    public static String NonceStr(){  
-        String res = Math.random()+"::"+new Date().toString().substring(0, 30);  
-        return res;  
-    }  
-      
-     public static String GetIp() {  
-        InetAddress ia=null;  
-        try {  
-            ia=InetAddress.getLocalHost();  
-            String localip=ia.getHostAddress();  
-            return localip;  
-        } catch (Exception e) {  
-            return null;  
-        }  
+     public static String GetIp() {
+        InetAddress ia=null;
+        try {
+            ia=InetAddress.getLocalHost();
+            String localip=ia.getHostAddress();
+            return localip;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-     /**
-	   * 生成签名  
-	   * @param characterEncoding   编码
-	   * @param parameters          集合
-	   * @param key                 微信APPID
-	   * @return					sign
-	   */
-	  public static String createSign(String characterEncoding,Map<String,String> parameters,String key){
-
-		  StringBuffer sb = new StringBuffer();
-		  Set<Entry<String,String>> es = parameters.entrySet();
-		  Iterator<Entry<String,String>> it = es.iterator();
-		  while(it.hasNext()) {  
-           Entry<String,String> entry = (Entry<String,String>)it.next();
-           String k = (String)entry.getKey();  
-           Object v = entry.getValue();  
-           if(null != v && !"".equals(v)  
-                   && !"sign".equals(k) && !"key".equals(k)) {  
-               sb.append(k + "=" + v + "&");  
-           }  
-		  }
-		  sb.append("key=" + key);  
-		  //String sign  = MD5Util.getMessageDigest(sb.toString().getBytes());
-		  System.out.println(">>>>加密前"+sb.toString());
-	      String sign = MD5Util.MD5Encodeto(sb.toString(), characterEncoding).toUpperCase();
-	      return sign;  
-	  }
-       
-
-     //Map转xml数据  
-     public static String GetMapToXML(Map<String,String> param){  
-         StringBuffer sb = new StringBuffer();  
-         sb.append("<xml>");  
-         for (Entry<String,String> entry : param.entrySet()) {
-                sb.append("<"+ entry.getKey() +">");  
-                sb.append(entry.getValue());  
-                sb.append("</"+ entry.getKey() +">");  
-        }    
-         sb.append("</xml>");  
-         return sb.toString();  
-     }  
-     
-     
      /**
  	 * 在微信支付后台生成一个预支付订单
  	 * @param
@@ -121,9 +45,7 @@ public class WXRequestUtil {
  		
  	}
      
-      
-      
-    //微信统一下单参数设置  
+    //微信统一下单参数设置
     public static Map<String,String> WXParamGenerate(String body,String out_trade_no,double total_fee,String openid) throws Exception {
         int fee = (int)(total_fee * 0.1);
         Map<String, String> param = new TreeMap<String, String>();
@@ -140,14 +62,11 @@ public class WXRequestUtil {
         System.out.println("签名前数据："+param);
         //String sign =createSign("utf-8", param,MyConfig.APIKEY);//apiKey
         String sign =WXPayUtil.generateSignature(param,MyConfig.APIKEY);//apiKey
-        System.out.println("签名是否正确111："+WXPayUtil.isSignatureValid(param,MyConfig.APIKEY));
         param.put("sign", sign);  //签名
         Map<String, String> result =  initiatePay(param);
         return result;
     }  
-    
 
-    
   //微信下单后参数设置  
     public static Map<String,String> WXOrderParam(String packageStr,String nonceStr) throws Exception {
         Map<String, String> param = new TreeMap<String, String>();
@@ -163,9 +82,7 @@ public class WXRequestUtil {
         System.out.println("微信下单后参数设置随机字符串："+nonceStr);
         System.out.println("微信下单后参数设置时间："+timeStamp);
         System.out.println("微信下单后参数设置签名："+sign);
-
-        System.out.println("签名是否正确："+WXPayUtil.isSignatureValid(param,MyConfig.APIKEY));
-        return param;  
+        return param;
     }  
     
     //发起微信支付请求  
@@ -211,8 +128,6 @@ public class WXRequestUtil {
       return null;    
     }    
         
-
-
     /**
 	 * 微信支付回调获取返回参数
 	 * 
@@ -240,23 +155,7 @@ public class WXRequestUtil {
 		}
 		return result;
 	}
-	/**
-	 * 客户端返回字符串
-	 * @param response
-	 * @param string
-	 * @return
-	 */
-	public String renderString(HttpServletResponse response, String string) {
-		try {
-			response.reset();
-	        response.setContentType("application/json");
-	        response.setCharacterEncoding("utf-8");
-			response.getWriter().print(string);
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
-	}
+
 
     public static String createTimestamp() {
         return Long.toString(System.currentTimeMillis() / 1000);
@@ -287,34 +186,4 @@ public class WXRequestUtil {
 
         return sb.toString();
     }
-
-
-    /**
-     * xml组装
-     * @param parameters  集合 key value
-     * @return
-     */
-    public static String getRequestXml(SortedMap<String,Object> parameters){
-        StringBuffer sb = new StringBuffer();
-        sb.append("<xml>");
-        Set<Entry<String,Object>> es = parameters.entrySet();
-        Iterator<Entry<String,Object>> it = es.iterator();
-        while(it.hasNext()) {
-            Entry<String,Object> entry = (Entry<String,Object>)it.next();
-            String key = (String)entry.getKey();
-            String value = String.valueOf(entry.getValue());
-            if(!value.equals("null")){
-                if ("attach".equalsIgnoreCase(key)||"body".equalsIgnoreCase(key)||"sign".equalsIgnoreCase(key)) {
-                    sb.append("<"+key+">"+"<![CDATA["+value+"]]></"+key+">");
-                }else {
-                    sb.append("<"+key+">"+value+"</"+key+">");
-                }
-            }
-
-        }
-        sb.append("</xml>");
-        return sb.toString();
-    }
-
-
-}  
+}

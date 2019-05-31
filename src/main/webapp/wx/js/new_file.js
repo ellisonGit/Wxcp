@@ -12,27 +12,7 @@ var JobNo='';//工号
 $(function(){
 //获取openId
 	openId = getOpenIdFromCookie();
-	//验证是否已经绑定过
-	function validateBind(){
-		var url = "/api/forward/validateBanding";
-		$.ajax({
-			url: url,
-			data:{
-				openId:openId
-			},
-			type:'GET',
-			success:function(data){
-				var result = JSON.parse(data.data);
-              //  alert(result);
-				if(result=="-1"){
-					window.location.href=Url_+"/api/hnjca/auth?returnUrl="+Url_+"/api/wxPay.html";
-				}
-			}
 
-		});
-
-	}
-	validateBind();
 	var a=10;
 
 	$(".person_wallet_recharge .ul li").click(function(e){
@@ -136,30 +116,7 @@ $(function(){
 					WeixinJSBridge.call('closeWindow');
 				}
 			}
-
-
-		/*WeixinJSBridge.invoke('getBrandWCPayRequest', {
-				"appId": appId,     //公众号名称,由商户传入
-				"timeStamp": timeStamp,         //时间戳,自1970年以来的秒数
-				"nonceStr": nonceStr, //随机串
-				"package": package,
-				"signType": "MD5",         //微信签名方式：
-				"paySign": paySign //微信签名
-			},
-			function (res) {
-				if (res.err_msg == "get_brand_wcpay_request:ok") {
-					console.log('支付成功');
-					//支付成功后跳转的页面
-				} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-					console.log('支付取消');
-				} else if (res.err_msg == "get_brand_wcpay_request:fail") {
-					alert("支付失败1");
-					console.log('支付失败');
-					WeixinJSBridge.call('closeWindow');
-				} //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok,但并不保证它绝对可靠。*/
 			);
-
-
 	}
 //调用微信JS api 支付
 	function callpay() {
@@ -217,5 +174,27 @@ $(function(){
 		});
 	}
 
+//验证是否已经绑定过
+	function validateBind(){
+		var url = "/api/forward/validateBanding";
+		$.ajax({
+			url: url,
+			data:{
+				openId:openId
+			},
+			type:'GET',
+			success:function(data){
+				var result = JSON.parse(data.data);
+				//  alert(result);
+				if(result.data=="-1"){
+					//window.location.href=Url_+"/api/hnjca/auth?returnUrl="+Url_+"/api/wxPay.html";
+					window.location.href=Url_+"/api/hnjca/auth?returnUrl="+Url_+"/api/banding.html";
 
+				}
+			}
+
+		});
+
+	}
+	validateBind();
 });
