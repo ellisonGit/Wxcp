@@ -79,16 +79,17 @@ html , body{
 <!-- body 最后 -->
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-weui.min.js"></script>
-<script src="js/common.js"></script>
+<script src="js/common.js?id=003"></script>
+<script src="js/ellison.js?id=002"></script>
 
 <script>
 
 	document.getElementById("gonghao").focus();
-	
+	/*
 	var openId = getOpenIdFromCookie(); 	
 	//openId = "123";
 	
-	/*init();*/
+	/!*init();*!/
 	validateBind();
 	
 	//验证是否已经绑定过
@@ -101,7 +102,7 @@ html , body{
 			},
 			type:'GET',
 			success:function(data){				
-				var result = JSON.parse(data.data);				
+				var result = JSON.parse(data.data);
 				if(result.code=="000002"){
 					$.toptip('已绑定，即将跳转到详情页', 'success');
 					setTimeout(function(){
@@ -152,6 +153,6 @@ html , body{
 		});
 	}
  
- 
+ */
 </script>
 </html>

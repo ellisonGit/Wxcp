@@ -479,7 +479,7 @@ html{
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-weui.min.js"></script>
 <script src="js/fastclick.js"></script>
-<script src="js/common.js?no=001"></script>
+<script src="js/common.js?id=002"></script>
 <script>
   $(function() {
     FastClick.attach(document.body);
@@ -522,7 +522,7 @@ html{
 	qiehuan(tabValue);	 
 	loadChuruRecord(0,pageSize,month);
 	loadXiaofeiRecord();
-	loadYuE();
+	//loadYuE();
 	loadSum();
 	
 	//切换tab页
@@ -821,7 +821,7 @@ html{
 
 
 	//加载余额数据
-	function loadYuE() {
+	/*function loadYuE() {
 		var url = "/api/forward/getYuE";
 		$.ajax({
 			async: false,
@@ -839,7 +839,7 @@ html{
 				}
 			}
 		});
-	}
+	}*/
 
 	//加载支出，充值数据
 	function loadSum(paramMonth) {
@@ -861,6 +861,7 @@ html{
 					//alert(result.data.money);
 					$("zhichu").html(result.data.money== null ? 0 : result.data.money);
 					$("chongzhi").html(result.data.remainMoney == null ? 0 : result.data.remainMoney);
+					$(".my_yue span").html(toDecimal2(result.data.remainMoney - result.data.money));//余额
 				}
 			}
 		});

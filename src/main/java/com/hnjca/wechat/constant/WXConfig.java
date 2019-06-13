@@ -35,7 +35,7 @@ public class WXConfig {
 
     public static final String getUserInfoUrl = "https://api.weixin.qq.com/sns/userinfo?access_token=%1$s&openid=%2$s&lang=zh_CN";
 
-    public static final String cookieName = "wx_user_info";
+    public static final String cookieName = "wx_user";
 
     public static final String step1Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%1$s&redirect_uri=%2$s&response_type=code&scope=snsapi_userinfo&state=abc#wechat_redirect";
 

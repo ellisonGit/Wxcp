@@ -1,12 +1,10 @@
 package com.hnjca.wechat.controller;
 
-import com.alibaba.druid.support.json.JSONParser;
 import com.hnjca.wechat.enums.InfoEnum;
 import com.hnjca.wechat.util.DateUtil;
 import com.hnjca.wechat.util.MyConfig;
 import com.hnjca.wechat.util.MyRequestUtil;
 import com.hnjca.wechat.vo.ResponseInfo;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +16,8 @@ import java.util.Date;
 
 /**
  * Description: 转发请求到一卡通平台
- * User: YangYong
- * Date: 2019-04-02
+ * User: Ellison
+ * Date: 2019-06-11
  * Time: 14:39
  * Modified:
  */
@@ -35,7 +33,7 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/banding")
-    public ResponseInfo banding(String openid,String stuno,String stuname){
+    public ResponseInfo banding(String openid, String stuno, String stuname){
 
         if(openid == null || "".equals(openid)){
             System.out.println("没有获取到openId");
@@ -107,7 +105,7 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/queryConsumeByPage")
-    public ResponseInfo queryConsumeByPage(String fromuser,String start,String pageSize,String month,String type){
+    public ResponseInfo queryConsumeByPage(String fromuser, String start, String pageSize, String month, String type){
 
         if(fromuser == null || "".equals(fromuser)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
@@ -153,7 +151,7 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/queryDoorByPage")
-    public ResponseInfo queryDoorByPage(String fromuser,String start,String pageSize,String month){
+    public ResponseInfo queryDoorByPage(String fromuser, String start, String pageSize, String month){
 
         if(fromuser == null || "".equals(fromuser)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
@@ -209,7 +207,7 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/getSum")
-    public ResponseInfo getSum(String openId,String month){
+    public ResponseInfo getSum(String openId, String month){
 
         if(openId == null || "".equals(openId)){
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
@@ -231,7 +229,7 @@ public class ForwardController {
      * @return
      */
     @GetMapping(value = "/getXList")
-    public ResponseInfo getSum(String openId,String type,String month){
+    public ResponseInfo getSum(String openId, String type, String month){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         System.out.println("開始時間"+df.format(new Date()));// new Date()为获取当前系统时间
         if(openId == null || "".equals(openId)){

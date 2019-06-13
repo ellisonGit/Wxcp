@@ -13,9 +13,41 @@
         });
     </script>
 </head>
+
 <body>
-<body>
-<div id="div1" style="width:100px; height:100px; background:red";></div>
+<!-- html 部分   -->
+<div class="number">
+    <div id="num1">0</div>
+    <div id="num2">0</div>
+    <div id="num3">0</div>
+    <div id="num4">0</div>
+</div>
+<!-- js部分  -->
+<script type="text/javascript">
+    window.onload = function ()
+    {
+        //数字自动获取
+        var oNumone = document.getElementById("num1");
+        var oNumtwo = document.getElementById("num2");
+        var oNumthree = document.getElementById("num3");
+        var oNumfour = document.getElementById("num4");
+        var i = 0;
+        setInterval(updateNum, 10);
+        updateNum();
+        function updateNum()
+        {
+            if(oNumone.innerHTML<30)
+                oNumone.innerHTML = ++i
+            if(oNumtwo.innerHTML<66)
+                oNumtwo.innerHTML = ++i
+            if(oNumthree.innerHTML<88)
+                oNumthree.innerHTML = ++i
+            if(oNumfour.innerHTML<666)
+                oNumfour.innerHTML = ++i
+
+        }
+    }
+</script>
 </body>
 <script>
     var oDiv = document.getElementById('div1');

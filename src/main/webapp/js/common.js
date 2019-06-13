@@ -18,10 +18,12 @@ function getCookie(name){
 function getOpenIdFromCookie(){
 	//测试值
 	//return "123" 
-	var cookieStr = decodeURIComponent(getCookie("wx_user_info"));
+	var cookieStr = decodeURIComponent(getCookie("wx_user"));
+	//alert(cookieStr);
 	if(cookieStr != null && cookieStr != "undefined" && cookieStr !=""){
 		cookieStr = JSON.parse(cookieStr);
-		return cookieStr.openid;
+		//alert(cookieStr);
+		return cookieStr.UserId;
 	}else{
 		return "";
 	}	

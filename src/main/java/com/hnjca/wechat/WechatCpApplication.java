@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @MapperScan("com.hnjca.wechat.dao")
-@EnableScheduling//启动定时任务配置
+//@EnableScheduling//启动定时任务配置
 @SpringBootApplication
-public class WechatApplication {
+public class WechatCpApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WechatApplication.class, args);
+        SpringApplication.run(WechatCpApplication.class, args);
     }
 
 }
