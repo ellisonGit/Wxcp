@@ -66,12 +66,12 @@ public class ForwardController {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         System.out.println("star"+df.format(new Date()));// new Date()为获取当前系统时间
         if(openId == null || "".equals(openId)){
+            System.out.println("没有获取到openId");
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
         String url = MyConfig.ICARD_URL+ "/verificationBanding";
         String result = MyRequestUtil.sendGet(url,"openId="+openId);
         result   = URLDecoder.decode(result,"utf-8");
-        SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         System.out.println("end"+df.format(new Date()));// new Date()为获取当前系统时间
         System.out.println("验证是否该openid已经有绑定"+result);// new Date()为获取当前系统时间
         return new ResponseInfo(InfoEnum.SUCCESS,result);
@@ -89,7 +89,7 @@ public class ForwardController {
             return new ResponseInfo(InfoEnum.NO_OPENID,-1);
         }
 
-        String url = MyConfig.ICARD_URL+ "/userInfo";
+        String url = MyConfig.ICARD_URL+ "/cpuserInfo";
         String result = MyRequestUtil.sendPost(url,"openId="+openId);
 
         return new ResponseInfo(InfoEnum.SUCCESS,result);

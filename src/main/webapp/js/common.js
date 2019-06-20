@@ -1,4 +1,4 @@
-
+var UserId="";
 var icardUrl = "http://llison.viphk.ngrok.org/api";
 //获取cookie
 function getCookie(name){
@@ -17,7 +17,7 @@ function getCookie(name){
 //从cookie里面解析openId
 function getOpenIdFromCookie(){
 	//测试值
-	//return "123" 
+	//return "123"
 	var cookieStr = decodeURIComponent(getCookie("wx_user"));
 	//alert(cookieStr);
 	if(cookieStr != null && cookieStr != "undefined" && cookieStr !=""){
@@ -29,12 +29,12 @@ function getOpenIdFromCookie(){
 	}	
 }
 
-//初始化方法
+/*//初始化方法
 function init(){
-	if(openId== null || openId == ""){
-		window.location.href=icardUrl+"/hnjca/auth?returnUrl="+icardUrl+"/banding.html";
+	if(UserId== null || UserId == ""){
+		window.location.href=icardUrl+"/wxCp/authOutUser?returnUrl="+icardUrl+"/banding.html";
 	}
-}
+}*/
 
 //获取url后面参数的值
 function getQueryString(name) { 

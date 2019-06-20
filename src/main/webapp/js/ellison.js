@@ -1,5 +1,5 @@
 	var userId = getOpenIdFromCookie();
-alert(userId);
+//alert(userId);
 	validateBind();
 
 	/*//验证是否已经绑定过
@@ -69,13 +69,16 @@ alert(userId);
 		$.ajax({
 			url: url,
 			data:{
-				openId:openId
+				openId:userId
 			},
 			type:'GET',
 			success:function(data){
 				var result = JSON.parse(data.data);
-				if(result.code=="100001"){
-					window.location.href="http://llison.viphk.ngrok.org/api/wxCp/authOutUser";
+				if(result.code=="000002"){
+					$.toptip('已绑定，即将跳转到详情页', 'success');
+					setTimeout(function(){
+						window.location.href="info_1.html";
+					},700);
 				}
 			}
 		});
